@@ -15,7 +15,7 @@ try {
 }
 
 if($pdo){
-    echo 'success0';
+    echo 'success';
 
 }else{
     echo 'failed';
