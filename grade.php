@@ -2,26 +2,23 @@
 
 include 'connection.php';
 
-// $id = $_POST['id'];
-// $grade = $_POST['grade'];
-// $payment = $_POST['payment'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['grade'], $_GET['payment'])) {
+    if (!empty($_GET['grade']) && !empty($_GET['payment'])) {
+        $grade = $_GET['grade'];
+        $payment = $_GET['payment'];
 
-if (!isset($grade) || empty($grade)) {
-    die('Error: Grade cannot be null or empty');
-}
+        $sql = "INSERT INTO grade (grade, payment) VALUES (:grade, :payment)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['grade' => $grade, 'payment' => $payment]);
 
-$sql = "INSERT INTO grade (id, grade, payment) VALUES (?, ?, ?)";
-$stmt = $pdo->prepare($sql);
-
-try {
-    if ($stmt->execute([$id, $grade, $payment])) {
-        echo 'Record added successfully';
+        echo json_encode(['message' => 'Data inserted successfully']);
     } else {
-        echo 'Error: ' . $stmt->errorInfo()[2];
+        echo json_encode(['error' => 'All fields are required']);
     }
-} catch (PDOException $e) {
-    echo 'Error: ' . $e->getMessage();
+} else {
+    echo json_encode(['error' => 'Invalid request method']);
 }
+
 
 ?>
