@@ -2,9 +2,9 @@
 
 include 'connection.php';
 
-$id = $_POST['id'];
-$grade = $_POST['grade'];
-$payment = $_POST['payment'];
+// $id = $_POST['id'];
+// $grade = $_POST['grade'];
+// $payment = $_POST['payment'];
 
 
 if (!isset($grade) || empty($grade)) {
