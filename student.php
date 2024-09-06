@@ -12,12 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $number = $_GET['number'];
             $password = $_GET['password'];
             $wnumber = $_GET['wnumber'];
-            $grade = $_GET['grade'];
             $address = $_GET['address'];
 
            
-            $sql = "INSERT INTO individual_student (name, email, parentname, dob, address, password, wnumber, grade, number) 
-                    VALUES (:name, :email, :parentname, :dob, :address, :password, :wnumber, :grade, :number)";
+            $sql = "INSERT INTO individual_student (name, email, parentname, dob, address, password, wnumber, number) 
+                    VALUES (:name, :email, :parentname, :dob, :address, :password, :wnumber,  :number)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'name' => $name,
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
                 'address' => $address,
                 'password' => $password,
                 'wnumber' => $wnumber,
-                'grade' => $grade,
                 'number' => $number
             ]);
             echo json_encode(['message' => 'Record created successfully']);

@@ -10,15 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $name = $_GET['name'];
             $gmail = $_GET['gmail'];
             $studio=$_GET['studio'];
-            $number=$_GET['number'];
+            $tnumber=$_GET['tnumber'];
             $password=$_GET['password'];
-            $wnumber = $_GET['wnumber'];
+            $twnumber = $_GET['twnumber'];
             $address = $_GET['address'];
             
 
-            $sql = "INSERT INTO trainer (name, gmail,studio,address,password,wnumber,number) VALUES (:name, :gmail,:studio,:address,:password,:wnumber,:number)";
+            $sql = "INSERT INTO trainer (name, gmail,studio,address,password,twnumber,tnumber) VALUES (:name, :gmail,:studio,:address,:password,:twnumber,:tnumber)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(['name' => $name, 'gmail' => $gmail,'studio'=>$studio,'address'=>$address,'password'=>$password,'wnumber'=>$wnumber,'number'=>$number]);
+            $stmt->execute(['name' => $name, 'gmail' => $gmail,'studio'=>$studio,'address'=>$address,'password'=>$password,'twnumber'=>$twnumber,'tnumber'=>$tnumber]);
             echo json_encode(['message' => 'Record created successfully']);
         } elseif ($action === 'update') {
             $id = $_GET['id'];
