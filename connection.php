@@ -14,12 +14,6 @@ try {
     exit();
 }
 
-if($pdo){
-    echo 'success';
-
-}else{
-    echo 'failed';
-}
 
 header('Content-Type: application/json');
 

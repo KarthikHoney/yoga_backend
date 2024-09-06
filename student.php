@@ -1,6 +1,8 @@
 <?php
 include 'connection.php';
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_GET['action'];
     try {
@@ -12,12 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $number = $_GET['number'];
             $password = $_GET['password'];
             $wnumber = $_GET['wnumber'];
-            $grade = $_GET['grade'];
             $address = $_GET['address'];
 
            
-            $sql = "INSERT INTO individual_student (name, email, parentname, dob, address, password, wnumber, grade, number) 
-                    VALUES (:name, :email, :parentname, :dob, :address, :password, :wnumber, :grade, :number)";
+            $sql = "INSERT INTO individual_student (name, email, parentname, dob, address, password, wnumber, number) 
+                    VALUES (:name, :email, :parentname, :dob, :address, :password, :wnumber, :number)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'name' => $name,
@@ -27,9 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
                 'address' => $address,
                 'password' => $password,
                 'wnumber' => $wnumber,
-                'grade' => $grade,
                 'number' => $number
             ]);
+
+            // Get the last inserted ID
+            $lastInsertId = $pdo->lastInsertId();
+
+            // Store the last inserted ID in the session
+            $_SESSION['id'] = $lastInsertId;
+
             echo json_encode(['message' => 'Record created successfully']);
         } elseif ($action === 'update') {
             $id = $_GET['id'];
@@ -39,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $sql = "UPDATE individual_student SET name = :name, email = :email WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['id' => $id, 'name' => $name, 'email' => $email]);
+
+            // Update the session ID
+            $_SESSION['id'] = $id;
+
             echo json_encode(['message' => 'Record updated successfully']);
         } elseif ($action === 'delete') {
             $id = $_GET['id'];
@@ -46,6 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
             $sql = "DELETE FROM individual_student WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['id' => $id]);
+
+            // Remove the session ID if the deleted ID matches
+            if ($_SESSION['id'] == $id) {
+                unset($_SESSION['id']);
+            }
             echo json_encode(['message' => 'Record deleted successfully']);
         }
     } catch (Exception $e) {
