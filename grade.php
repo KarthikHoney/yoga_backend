@@ -1,27 +1,40 @@
 <?php
-
 include 'connection.php';
 
+session_start();
 
-$grade = $_POST['grade'];
-$payment = $_POST['payment'];
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-
-if (!isset($grade) || empty($grade)) {
-    die('Error: Grade cannot be null or empty');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
 }
 
-$sql = "INSERT INTO grade (id, grade, payment) VALUES (?, ?, ?)";
-$stmt = $pdo->prepare($sql);
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
 
-try {
-    if ($stmt->execute([$id, $grade, $payment])) {
-        echo 'Record added successfully';
-    } else {
-        echo 'Error: ' . $stmt->errorInfo()[2];
+if (isset($_SESSION['id'])) {
+    echo json_encode(['error' => 'User must be logged in']);
+    exit;
+}
+
+if (isset($data['grade'], $data['payment'])) {
+    $grade = $data['grade'];
+    $payment = $data['payment'];
+    $userId = $_SESSION['id'];
+
+    try {
+        $sql = "INSERT INTO grade (user_id, grade, payment) VALUES (:user_id, :grade, :payment)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['user_id' => $userId, 'grade' => $grade, 'payment' => $payment]);
+
+        echo json_encode(['message' => 'Data inserted successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error inserting data: ' . $e->getMessage()]);
     }
-} catch (PDOException $e) {
-    echo 'Error: ' . $e->getMessage();
+} else {
+    echo json_encode(['error' => 'All fields are required']);
 }
-
 ?>

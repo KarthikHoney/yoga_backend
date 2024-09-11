@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $password = isset($_GET['password']) ? $_GET['password'] : '';
 
     try {
-        // Prepare SQL based on the role
+        
         if ($role === 'individualstudent') {
             $sql = "SELECT * FROM individual_student WHERE name = :name";
         } else if ($role === 'trainerstudent') {
