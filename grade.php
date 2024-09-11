@@ -15,10 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
 
-if (isset($_SESSION['id'])) {
+if (!isset($_SESSION['id'])) {
     echo json_encode(['error' => 'User must be logged in']);
     exit;
 }
+
+// Debugging session ID
+error_log("Session ID: " . $_SESSION['id']);
+
 
 if (isset($data['grade'], $data['payment'])) {
     $grade = $data['grade'];

@@ -23,15 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
         $stmt->bindParam(':name', $name);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+       
 
        
 
         if ($user && $user['password'] === $password) {
             
-            $_SESSION['id'] = $user['id'];
-            $_SESSION['role'] = $role;
+          
 
-            echo json_encode(['success' => true, 'user' => $user]);
+            echo json_encode($user);
         } else {
             echo json_encode(['success' => false, 'error' => 'Invalid credentials']);
         }
